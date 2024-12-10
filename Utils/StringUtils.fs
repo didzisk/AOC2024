@@ -10,3 +10,11 @@ let reverseString (x:string) =
 
 let split (chars: string) (s: string) = 
     s.Split (Seq.toArray chars, StringSplitOptions.RemoveEmptyEntries)
+    
+let c2i =
+    System.Globalization.CharUnicodeInfo.GetDigitValue
+    
+let c2im (c:char) =
+    match c with
+    | x when x>='0' && x<='9' ->  System.Globalization.CharUnicodeInfo.GetDigitValue x
+    | _ -> -1

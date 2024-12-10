@@ -1,5 +1,4 @@
 ﻿open System.IO
-open StringUtils
 
 let day = 9
 
@@ -54,18 +53,7 @@ let defrag1 (text:int array) =
     let startId = text |> Array.max
     for id = startId downto 1 do
         defragmentOneFile1 text reverseText id
-    text |> visualizeHdd
     
-let a="2333133121414131402" |> (_.ToCharArray()) |> generateHdd
-// let ra = a |> Array.rev 
-//
-// a
-// |> visualizeHdd
-// defragmentOneItem a ra 9
-// defragmentOneItem a ra 9
-//
-//0099811188827773336446555566
-
 let checksum (text:int array) =
     text
     |> Array.mapi (
@@ -85,10 +73,6 @@ let calc1 (text:string) =
     defrag1 arr
     checksum arr |> printfn "%A"
     
-//calc1 "2333133121414131402"
-
-//calc1 text
-
 let findFreeSpaces (arr:int array) (spaces:int array) (count:int)=
     {spaces[count]..arr.Length-count}
     |> Seq.tryFind (fun i ->
@@ -125,7 +109,6 @@ let defrag2 (text:int array) =
     for id = startId downto 1 do
         printfn $"{id}"
         defragmentOneFile2 text reverseText spaces id
-    text |> visualizeHdd
     
 
 let calc2 (text:string) =
@@ -136,5 +119,7 @@ let calc2 (text:string) =
     defrag2 arr
     checksum arr |> printfn "%A"
     
+calc1 "2333133121414131402"
+calc1 text
 calc2 "2333133121414131402"
 calc2 text
