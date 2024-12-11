@@ -5,7 +5,7 @@ let day = 11
 //MetaUtils.getTodayInput day
 let filename = MetaUtils.todayFilename day
 
-let getWorld() =
+let getInput() =
     File.ReadAllText filename
     |> trim
     |> split " "
@@ -38,18 +38,11 @@ let rec blink n =
     else
         nextStep >> blink (n-1)
         
-let calc blinkFunc s =
-    s
-    |> Seq.countBy id
-    |> Seq.map (fun (a,x) -> a, int64 x)
-    |> blinkFunc
-    |> Seq.sumBy snd
-    
-let calc1 = calc (blink 25) 
+let calc n =
+    Seq.countBy id
+    >> Seq.map (fun (a,x) -> a, int64 x)
+    >> (blink n)
+    >> Seq.sumBy snd
 
-let calc2 = calc (blink 75)
-    
-seq{"125"; "17"} |> calc1|> printfn "example Del1 %A "
-
-calc1 (getWorld()) |> printfn "Del1 %A "
-calc2 (getWorld()) |> printfn "Del2 %A "
+getInput() |> calc 25 |> printfn "Del1 %A "
+getInput() |> calc 75 |> printfn "Del2 %A "
