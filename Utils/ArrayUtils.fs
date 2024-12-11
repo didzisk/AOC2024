@@ -23,3 +23,8 @@ let findWhere predicate (arr:'a array array) =
                 yield (r,c)
                 ]
     |> List.head
+
+let validPos (world:'a array array) (r,c) =     
+    let validRow = r>=0 && r<world.Length
+    let validCol = c>=0 && c<world[0].Length
+    validRow && validCol

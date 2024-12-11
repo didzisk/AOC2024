@@ -18,3 +18,6 @@ let c2im (c:char) =
     match c with
     | x when x>='0' && x<='9' ->  System.Globalization.CharUnicodeInfo.GetDigitValue x
     | _ -> -1
+    
+let trim (s:string) =
+    s.Trim()
