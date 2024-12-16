@@ -10,6 +10,7 @@
         <Compile Include="StringUtils.fs" />
         <Compile Include="MetaUtils.fs" />
         <Compile Include="ArrayUtils.fs" />
+        <Compile Include="MathUtils.fs" />
     </ItemGroup>
 
 </Project>
