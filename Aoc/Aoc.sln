@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Aoc2024", "Aoc2024\Aoc2024.fsproj", "{2AA3A177-F604-49B3-A12C-8A03BBCC528F}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Utils", "Utils\Utils.fsproj", "{3FEC05C3-4C43-4F6D-A5A2-E279F8854C9B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2AA3A177-F604-49B3-A12C-8A03BBCC528F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AA3A177-F604-49B3-A12C-8A03BBCC528F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AA3A177-F604-49B3-A12C-8A03BBCC528F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AA3A177-F604-49B3-A12C-8A03BBCC528F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FEC05C3-4C43-4F6D-A5A2-E279F8854C9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FEC05C3-4C43-4F6D-A5A2-E279F8854C9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FEC05C3-4C43-4F6D-A5A2-E279F8854C9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FEC05C3-4C43-4F6D-A5A2-E279F8854C9B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

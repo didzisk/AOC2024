@@ -5,8 +5,8 @@ open System.Net
 open System.Net.Http
 open System.IO
 
-let todayFilename day = @$"d:\Training\Aoc2024files\day{day}.txt"
-let [<Literal>] keyFilename =  @"d:\Training\Aoc2024files\key.txt"
+let todayFilename day = @$"c:\Training\Aoc2024files\day{day}.txt"
+let [<Literal>] keyFilename =  @"c:\Training\Aoc2024files\key.txt"
 let getTodayInput day =
     
     let filename = todayFilename day
