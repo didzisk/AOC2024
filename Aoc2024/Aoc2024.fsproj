@@ -8,9 +8,12 @@
     <ItemGroup>
         <Compile Include="Dec13.fs" />
         <Compile Include="Dec14.fs" />
+        <Compile Include="Dec15.fs" />
+        <Compile Include="Dec16.fs" />
         <Compile Include="Dec17.fs" />
         <Compile Include="Dec18.fs" />
         <Compile Include="Dec19.fs" />
+        <Compile Include="Dec23.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
@@ -20,6 +23,7 @@
 
     <ItemGroup>
       <PackageReference Include="FSharpx.Collections" Version="3.1.0" />
+      <PackageReference Include="Spreads" Version="2019.0.412" />
     </ItemGroup>
 
 </Project>
