@@ -2,6 +2,7 @@
 
 open System
 open System.IO
+open Microsoft.FSharp.Core
 open StringUtils
 
 let day = 23
@@ -18,7 +19,6 @@ let parseInput (text:string) =
             let arr = split "-" x |> Array.sort
             arr[0], arr[1])
         |> Set.ofArray
-    //conn |> Seq.iter (printfn "%A")
     conn
         
 let sortTriplet a b c =
@@ -26,21 +26,76 @@ let sortTriplet a b c =
     arr |> Array.sortInPlace
     arr[0], arr[1], arr[2]
     
-let calc1 (text:string) =
-    let arr = parseInput text
+let makeTriplets arr = 
     seq {
-        for (first, second) in arr do
-            for (a,b) in (arr |> Set.filter (fun (x,y)-> x = second)) do
-                let (c,d,e)=sortTriplet first second b
+        for first, second in arr do
+            for _,b in (arr |> Set.filter (fun (x,_)-> x = second)) do
+                let c,d,e = sortTriplet first second b
                 if Set.contains (c,e) arr then
                     yield (c,d,e) 
     }
+    
+//returns all others connected directly to this one
+let groupConn (conn:Set<string * string>) =
+    let reversed =
+        conn
+        |> Set.map (fun (a,b)->b,a)
+    Set.union conn reversed
+    |> Seq.groupBy fst
+    |> Seq.map (fun (a, s) ->
+        a, s |> Seq.map snd
+        )
+    |> Map.ofSeq
+    
+let addOneLevel (conn:Set<string * string>) (cur:string array array) =
+    let connGrouped = groupConn conn
+    [|
+    for line in cur do
+        for a in connGrouped.Keys do
+            if line |> Array.forall(fun x-> connGrouped[a] |> Seq.contains x) then
+                yield (line |> Array.append [|a|] |> Array.sort)
+    |]
+    |> Array.distinct
+
+let parse2 text =
+    text
+        |> split "\r\n"
+        |> Array.map (split "-")
+
+let calc1 (text:string) =
+    let conn = parseInput text
+    conn
+    |> makeTriplets
     |> Seq.filter (fun (a,b,c)-> a.StartsWith("t") || b.StartsWith("t") || c.StartsWith("t"))
     //|> Seq.iter (printfn "%A")
     |> Seq.length
     |> (printfn "%A")
 let Del1() =
     calc1 inputString
+
+let calc12 text =
+    let conn = parseInput text
+    let lev2 = parse2 text
+    let lev3 = addOneLevel conn lev2
+    let arr =
+        lev3
+        |> Array.filter (fun a-> a[0].StartsWith("t") || a[1].StartsWith("t") || a[2].StartsWith("t"))
+    arr |> Seq.iter (printfn "%A")
+    arr    |> Array.length
+
+let rec genNext conn curr =
+    let next = addOneLevel conn curr
+    if Array.length next = 1 then
+        next
+    else
+        genNext conn next
+        
+let calc2 text =
+    let conn = parseInput text
+    let lev2 = parse2 text
+    let final = genNext conn lev2
+    final |> Seq.iter (printfn "%A")
+    String.Join(",", final[0])
     
 let ex = @"kh-tc
 qp-kh
@@ -77,3 +132,12 @@ td-yn"
 
 let Del1ex() =
     calc1 ex
+    
+let Del12() =
+    calc12 inputString |> printfn "%d"
+    
+let Del2ex() =
+    calc2 ex |> printfn "%s"
+    
+let Del2() =
+    calc2 inputString |> printfn "%s"
