@@ -3,8 +3,6 @@
 open System
 open System.Collections.Generic
 open System.IO
-open Spreads
-open Spreads.Collections
 open StringUtils
 
 let day = 16
@@ -15,27 +13,15 @@ let inputString = File.ReadAllText filename
 
 let parseInput (text:string) =
     let lines = text |> split "\n"
-    let world = lines |> Array.map _.ToCharArray()
+    let world = lines |> Array.map _.Trim() |> Array.map _.ToCharArray()
     //lines |> Seq.iter (printfn "%s")
     let s = world |> ArrayUtils.findWhere (fun x-> x='S')
     let e = world |> ArrayUtils.findWhere (fun x-> x='E')
     world, s, e
     
-[<CustomComparison; CustomEquality>]
+[<NoComparison; CustomEquality>]
 type CurrentState =
     {r:int;c:int;dir:int}
-    interface IComparable with 
-        member this.CompareTo (obj:obj) =
-            match obj with
-            | null                 -> 1
-            | :? CurrentState as y ->
-                //(this :> IComparable<_>).CompareTo other
-                let x = this
-                if (x.c < y.c) || (x.r < y.r) || (x.dir < y.r) then -1
-                else
-                    if (x.c = y.c) || (x.r = y.r) || (x.dir = y.r) then 0
-                    else 1
-            | _                    -> invalidArg "obj" "not a CurrentState"
     interface IEquatable<CurrentState> with
         member this.Equals (other: CurrentState): bool = 
             let x = this
@@ -46,20 +32,22 @@ type CurrentState =
     override this.GetHashCode() =
         this.dir*1000_000+this.r*1000+this.c
 
-let calc1 (text:string) =
-    let world, s, e  = parseInput text
-    let DIRS = [|(-1,0);(0,1);(1,0);(0,-1)|] // up right down left
+let DIRS = [|(-1,0);(0,1);(1,0);(0,-1)|] // up right down left
+
+let dijkstra (world:char array array) rs cs re ce  dir= 
     let DIST = Dictionary<CurrentState, int>() //current pos with direction - and distance
     let Q = PriorityQueue<CurrentState, int>()//(world.Length * world[0].Length, KVPComparer<int, CurrentState>(KeyComparer<int>.Default, KeyComparer<CurrentState>.Default)); //Distance and current pos with direction, sorted by distance
     let SEEN = HashSet<CurrentState>()
     let mutable best = -1
-    let mutable curr = {r=fst s; c=snd s; dir = 1}
+    let mutable curr = {r=rs; c=cs; dir = dir}
+    let mutable arrivalDir = 0
     let mutable d = 0
     Q.Enqueue( curr, 0)
     while Q.TryDequeue(&curr, &d) do
         if not (DIST.ContainsKey(curr)) then
             DIST.Add(curr, d)
-        if curr.r = fst e && curr.c = snd e && best = -1 then
+        if curr.r = re && curr.c = ce && best = -1 then
+            arrivalDir <- curr.dir
             best <- d
         if not(SEEN.Contains curr) then
             SEEN.Add(curr) |> ignore
@@ -71,32 +59,35 @@ let calc1 (text:string) =
             Q.Enqueue({curr with dir = dirPlus90}, d+1000)
             let dirPlus270 = (curr.dir+3) % 4
             Q.Enqueue({curr with dir = dirPlus270}, d+1000)
-    printfn "Part 1: %d" best
-            
-            
-// while Q:
-//     d,r,c,dir = heapq.heappop(Q)
-//     if (r,c,dir) not in DIST:
-//         DIST[(r,c,dir)] = d
-//     if r==er and c==ec and best is None:
-//         best = d
+    best, arrivalDir
 
-//     if (r,c,dir) in SEEN:
-//         continue
-//     SEEN.add((r,c,dir))
-//     dr,dc = DIRS[dir]
-//     rr,cc = r+dr,c+dc
-//     if 0<=cc<C and 0<=rr<R and G[rr][cc] != '#':
-//         heapq.heappush(Q, (d+1, rr,cc,dir))
-//     heapq.heappush(Q, (d+1000, r,c,(dir+1)%4))
-//     heapq.heappush(Q, (d+1000, r,c,(dir+3)%4))
+let calc1 (text:string) =
+    let world, (rs,cs), (re,ce)  = parseInput text
+    dijkstra world rs cs re ce 1
 
-    
+let calc2  (text:string) =
+    let world, (rs,cs), (re,ce)  = parseInput text
+    let best, _ = dijkstra world rs cs re ce 1
+    let s = 
+        seq{
+        for r in 1..world.Length-2 do
+            printfn "Row %d" r
+            for c in 1..world[0].Length-2 do
+                printf "."
+                let dist1, dir1 = dijkstra world rs cs r c 1
+                let (dist2,_) = dijkstra world r c re ce dir1
+                if dist1+dist2 = best then
+                    yield r,c
+        }
+        |> Seq.distinct
+        |> List.ofSeq
+    (Seq.length s), s, world
     
     
 let Del1 () =
     calc1 inputString
-    
+    |> fst
+    |> printfn "Part 1: %d" 
   
 let ex2 = @"#################
 #...#...#...#..E#
@@ -120,3 +111,28 @@ let ex2 = @"#################
 
 let Del1ex () =
     calc1 ex2
+    |> fst
+    |> printfn "Part 1ex: %d"
+    
+let drawWorld (world:char array array) (path:(int * int) seq) =
+    let p = path |> Set.ofSeq
+    for r in 0..world.Length-1 do
+        printfn ""
+        for c in 0..world[0].Length-1 do
+            if p.Contains(r,c) then
+                printf "O"
+            else
+                printf "%c" (world[r][c])
+                
+let Del2ex () =
+    let l, s, w = calc2 ex2
+    l |> printfn "Part 2ex: %d"
+    drawWorld w s
+    
+let Del2 () =
+    let l, s, w = calc2 inputString
+    l |> printfn "Part 2: %d"
+    //drawWorld w s
+    
+
+                

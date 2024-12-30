@@ -25,7 +25,6 @@
 
     <ItemGroup>
       <PackageReference Include="FSharpx.Collections" Version="3.1.0" />
-      <PackageReference Include="Spreads" Version="2019.0.412" />
     </ItemGroup>
 
 </Project>
