@@ -3,6 +3,7 @@
 open System
 open System.Collections.Generic
 open System.IO
+open GridForm
 open StringUtils
 
 let day = 16
@@ -24,9 +25,7 @@ type CurrentState =
     {r:int;c:int;dir:int}
     interface IEquatable<CurrentState> with
         member this.Equals (other: CurrentState): bool = 
-            let x = this
-            let y = other
-            (x.c = y.c) && (x.r = y.r) && (x.dir = y.dir)
+            (this.c = other.c) && (this.r = other.r) && (this.dir = other.dir)
 
     override this.Equals(obj) = failwith "todo"
     override this.GetHashCode() =
@@ -35,7 +34,7 @@ type CurrentState =
 let DIRS = [|(-1,0);(0,1);(1,0);(0,-1)|] // up right down left
 
 let dijkstra (world:char array array) rs cs re ce  dir= 
-    let DIST = Dictionary<CurrentState, int>() //current pos with direction - and distance
+    //let DIST = Dictionary<CurrentState, int>() //current pos with direction - and distance
     let Q = PriorityQueue<CurrentState, int>()//(world.Length * world[0].Length, KVPComparer<int, CurrentState>(KeyComparer<int>.Default, KeyComparer<CurrentState>.Default)); //Distance and current pos with direction, sorted by distance
     let SEEN = HashSet<CurrentState>()
     let mutable best = -1
@@ -44,13 +43,12 @@ let dijkstra (world:char array array) rs cs re ce  dir=
     let mutable d = 0
     Q.Enqueue( curr, 0)
     while Q.TryDequeue(&curr, &d) do
-        if not (DIST.ContainsKey(curr)) then
-            DIST.Add(curr, d)
+        // if not (DIST.ContainsKey(curr)) then
+        //     DIST.Add(curr, d)
         if curr.r = re && curr.c = ce && best = -1 then
             arrivalDir <- curr.dir
             best <- d
-        if not(SEEN.Contains curr) then
-            SEEN.Add(curr) |> ignore
+        if SEEN.Add(curr) then
             let dr,dc = DIRS[curr.dir]
             let rr,cc = curr.r+dr,curr.c+dc
             if cc>=0 && cc<world[0].Length && rr>=0 && rr<world.Length && world[rr][cc] <> '#' then
@@ -123,11 +121,27 @@ let drawWorld (world:char array array) (path:(int * int) seq) =
                 printf "O"
             else
                 printf "%c" (world[r][c])
+
+let SCALE = 4.0
+let paintWorld (world:char array array) (path:(int * int) seq) =
+    let p = path |> Set.ofSeq
+    for r in 0..world.Length-1 do
+        printfn ""
+        for c in 0..world[0].Length-1 do
+            if p.Contains(r,c) then
+                SmallBall mf SCALE 0.0 0.0 System.Drawing.Color.Cyan (float r) (float -c)
+            else
+                match world[r][c] with
+                | '#' -> PointRC mf SCALE System.Drawing.Color.Gray r c
+                | 'S' -> PointRC mf SCALE System.Drawing.Color.Green r c
+                | 'E' -> PointRC mf SCALE System.Drawing.Color.Black r c
+                | _ -> ()
+
                 
 let Del2ex () =
     let l, s, w = calc2 ex2
     l |> printfn "Part 2ex: %d"
-    drawWorld w s
+    paintWorld w s
     
 let Del2 () =
     let l, s, w = calc2 inputString
