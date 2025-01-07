@@ -14,6 +14,8 @@
         <Compile Include="Dec18.fs" />
         <Compile Include="Dec19.fs" />
         <Compile Include="Dec20.fs" />
+        <Compile Include="Dec21.fs" />
+        <Compile Include="Dec22.fs" />
         <Compile Include="Dec23.fs" />
         <Compile Include="Dec24.fs" />
         <Compile Include="Dec25.fs" />
