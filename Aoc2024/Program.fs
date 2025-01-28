@@ -1,6 +1,6 @@
-Dec24.Del1() |> ignore
-//Dec24.Test2() |> ignore
+Dec15.Del2()
+//Dec15.test2big()
 
-Dec24.Del2()
+//Dec24.Del2()
 
 

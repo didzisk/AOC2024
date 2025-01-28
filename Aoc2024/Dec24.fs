@@ -139,15 +139,6 @@ let Test2 () =
     
 let Test1 () = 
     let (_, commands) = parseInput inputString
-    // let x=21547963238425UL
-    // let y=22045422764601UL
-    // let z=43559017878162UL 
-    // let x=1547963238425UL
-    // let y=2045422764601UL
-    // let z=3559017878162UL 
-    // let x=1500000000000UL
-    // let y=2000000000000UL
-    // let z=3559017878162UL 
     let x=1UL
     let y=0UL
     let z=3559017878162UL 
