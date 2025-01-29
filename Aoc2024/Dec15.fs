@@ -82,17 +82,6 @@ let Del1 () =
     
     calc1 inputString
     
-[<NoComparison; CustomEquality>]
-type Position =
-    {r:int;c:int}
-    interface IEquatable<Position> with
-        member this.Equals (other: Position): bool = 
-            (this.c = other.c) && (this.r = other.r)
-
-    override this.Equals(obj) = failwith "todo"
-    override this.GetHashCode() =
-        this.r*1000+this.c
-
 let doubleIt (world:char array array) =
     let obstacles = 
         seq {
